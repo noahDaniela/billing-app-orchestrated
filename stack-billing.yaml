@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+#database engine service
+  postgres_db:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    ports: 
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwerty
+    volumes:
+      - ./dbfiles:/docker-entrypoint-initdb.d
+      - ./postgres_data:/var/lib/postgresql/data
+#database admin server
+  adminer:
+    container_name: adminer
+    image: adminer:latest
+    restart: always
+    ports:
+      - "9090:8080"
+    depends_on:
+      - postgres_db
+
+#Billing app backend service
+  billingapp-back:
+    build:
+      context: ./java
+      args: 
+        - JAR_FILE=*.jar
+        - DB_PASSWORD = qwerty
+    container_name: billingapp-back
+    environment:
+        - JAVA_OPTS=
+          -Xms256M
+          -Xmx256M
+    depends_on:
+      - postgres_db
+    ports:
+      - 8080:8080
+
+#Billing app frontend service
+  billingapp-front:
+    build:
+      context: ./angular
+    container_name: billingapp-front
+    depends_on:
+      - billingapp-back
+    #rango de puertos
+    ports:
+      - 80:80

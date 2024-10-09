@@ -1,5 +1,6 @@
 # Usa una imagen base con JRE 17 en Alpine
-FROM openjdk:8-jre-alpine
+FROM bellsoft/liberica-openjdk-alpine:17
+
 
 # Instalar el paquete 'shadow' que incluye 'addgroup' y 'adduser'
 RUN apk add --no-cache shadow

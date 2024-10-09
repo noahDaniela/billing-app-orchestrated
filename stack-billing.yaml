@@ -30,8 +30,8 @@ services:
     build:
       context: ./java
       args: 
-        - JAR_FILE=*.jar
-        - DB_PASSWORD = qwerty
+        - JAR_FILE=billing-0.0.2.jar
+        - DB_PASSWORD=qwerty
     container_name: billingapp-back
     environment:
         - JAVA_OPTS=
@@ -41,6 +41,7 @@ services:
       - postgres_db
     ports:
       - 8080:8080
+
 
 #Billing app frontend service
   billingapp-front:
@@ -52,3 +53,11 @@ services:
     #rango de puertos
     ports:
       - 80:80
+    deploy:
+      resources:
+        limits:
+          cpus: "0.15"
+          memory: 250M
+      reservations:
+        cpus: 0.1
+        memory: 128M
